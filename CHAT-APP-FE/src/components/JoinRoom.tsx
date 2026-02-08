@@ -1,12 +1,12 @@
 import { useState } from "react";
 
 interface JoinRoomPropsInterface{
-    roomId?: string;
-    setRoomId?: React.Dispatch<React.SetStateAction<string>>;
-    joinChat: (roomId: string) => void
+    joinChatRoom: (roomId: string) => void;
+    isLoading: boolean;
+    createChatRoom: (roomId: string) => void
 }
 
-const JoinRoom = ({joinChat}: JoinRoomPropsInterface) => {
+const JoinRoom = ({joinChatRoom, isLoading, createChatRoom}: JoinRoomPropsInterface) => {
     const[roomId, setRoomId] = useState<string>('')
 
 const generateRoomId = () => {
@@ -19,13 +19,13 @@ const generateRoomId = () => {
         // e.preventDefault()
         const RandomRoomId = generateRoomId()
         console.log(RandomRoomId)
-        joinChat(RandomRoomId)
+        createChatRoom(RandomRoomId)
     }
 
     function handleJoinRoomId(e: any){
         e.preventDefault()
         console.log(roomId)
-        joinChat(roomId)
+        joinChatRoom(roomId)
     }
 
     
@@ -43,7 +43,7 @@ const generateRoomId = () => {
             <div className="flex flex-col items-center mx-auto max-w-137.5 my-5">
                 <button onClick={handleCreateRoomId} className="h-14 w-full  active:scale-98 transition-all duration-200
                 text-neutral-950 font-mono shadow-aceternity hover:rounded-lg  hover:inset-shadow-aceternity cursor-pointer ">
-                    Create the room
+                   {isLoading? "Creating..." : "Create the room"} 
                 </button>
 
                 <h1 className="flex tracking-tight justify-center text-xl text-neutral-950/30 my-3">
@@ -60,13 +60,14 @@ const generateRoomId = () => {
                     type="text" 
                     placeholder="Enter room code..."
                     value={roomId}
+                    required
                     onChange={(e) => setRoomId(e.target.value)}
                     className="h-full outline-none focus:inset-shadow-aceternity/40 hover:rounded-lg focus:rounded-lg transition-all duration-200 hover:inset-shadow-aceternity 
                     flex-1 shadow-aceternity placeholder:text-neutral-900 p-3" 
                     />
                     <button
                     className="w-[25%] h-full  shadow-aceternity hover:rounded transition-all 
-                    duration-200 hover:inset-shadow-aceternity active:scale-85"> Join </button>
+                    duration-200 hover:inset-shadow-aceternity active:scale-85"> {isLoading? "joining" : "Join"} </button>
                 </form>
 
                 <h3 className="bg-neutral-100/50 mt-5 text-neutral-950/50">
