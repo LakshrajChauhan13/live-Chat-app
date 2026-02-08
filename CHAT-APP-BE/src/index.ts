@@ -1,57 +1,107 @@
+import express from 'express'
 import { WebSocketServer, WebSocket } from "ws"
-import  express from 'express'
 import http from "http"
 
-// const app = express()
-// const server = http.createServer(http)
+const app = express()
+const server = http.createServer(app)
+const wss = new WebSocketServer({ server })
 
-const wss = new WebSocketServer({ port: 8080})
-
-interface WebSocketsArrayInterface {
-    socket: WebSocket;
-    payload: {
-        roomId: string
-    }
+interface RoomData {
+    messages : { type: string; message: string}[];
+    users: Set <WebSocket>
 }
 
-let allSockets: WebSocketsArrayInterface[] = []
+const rooms = new Map<string, RoomData>()
 
 wss.on("connection", (socket) => {
-    // socket.send("heya connected")
+    let currentRoomId: string | null = null;
     
     socket.on("message", (message) => {
-    // console.log(message.toString());
+    try{
+        const data = JSON.parse(message.toString())
+        console.log(data)
 
-    const parsedMessage = JSON.parse(message as unknown as string)   
-
-    // console.log(parsedMessage)
-
-    if(parsedMessage.type === "join"){
-        allSockets.push({
-            socket: socket,
-            payload:{
-                roomId: parsedMessage.payload.roomId
+        if(data.type === "create"){
+            const roomId = data.payload.roomId 
+            if(!rooms.has(roomId)){
+                rooms.set(roomId, { messages: [] , users: new Set()})
+                console.log('room created')
             }
-        })
+                
+            handleJoin(socket, roomId)
+            currentRoomId = roomId
+        }
+
+        if(data.type === "join"){
+            const roomId = data.payload.roomId;
+            if(!rooms.has(roomId)){
+                socket.send(JSON.stringify({
+                    type: "error",
+                    message: "Room doesn't exist, check the code"
+                }))
+            }
+            
+            handleJoin(socket, roomId)
+            currentRoomId = roomId
+        }
         
-    }
-
-    if(parsedMessage.type === "chat"){
-        const currentUserRoom = allSockets.find(x => x.socket === socket)?.payload.roomId
-        console.log(currentUserRoom)
-        setTimeout(() => {
-        allSockets.forEach((x) => {
-            if(x.payload.roomId === currentUserRoom && x.socket !== socket && x.socket.readyState === WebSocket.OPEN){
-                x.socket.send(parsedMessage.payload.message)
+        
+        if(data.type === "chat"){
+            if(currentRoomId && rooms.has(currentRoomId)){
+                const room = rooms.get(currentRoomId)
+                
+                const msgObj = {
+                    type: "received",
+                    message: data.payload.message
+                } 
+                
+                room?.messages.push(msgObj)
+                
+                room?.users.forEach(client => { 
+                    if(client !== socket && client.readyState === WebSocket.OPEN){
+                        client.send(JSON.stringify(msgObj))
+                    }})
+                    
+                }
             }
-        })            
-        }, 1000);      
     }
-})
-    socket.on("close", () => {
-        allSockets = allSockets.filter(x => x.socket !== socket)
-    })
+    catch(e){
+        console.error("Error " , e)
+    }    
+
 })  
+
+socket.on("close", () => {
+        if(currentRoomId && rooms.has(currentRoomId)){
+            const room = rooms.get(currentRoomId)
+            room?.users.delete(socket)
+// @ts-ignore
+            if(room?.users.size < 1){
+                rooms.delete(currentRoomId)
+            }
+        }
+    })
+})
+
+function handleJoin(socket: WebSocket, roomId: string) {
+    const room = rooms.get(roomId);
+    room?.users.add(socket)
+
+    socket.send(JSON.stringify({
+        type: "joined",
+        payload: {
+            roomId: roomId
+        }
+    }))
+    // @ts-ignore
+    if(room?.messages.length > 0){
+        socket.send(JSON.stringify({
+            type: "history",
+            payload: room?.messages
+        }))
+    }
+}
+// 'joined', 'history', 'error', 'received'
 
 //  {
 //     type: "join",
@@ -66,6 +116,6 @@ wss.on("connection", (socket) => {
 //     }
 //  }
 
-// app.listen(3000, () => {
-//     console.log("server running on the port 3000")
-// })
+server.listen(3000, () => {
+    console.log("server running on the port 3000")
+})
