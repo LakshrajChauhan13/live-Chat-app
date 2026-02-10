@@ -10,8 +10,8 @@ const JoinRoom = ({joinChatRoom, isLoading, createChatRoom}: JoinRoomPropsInterf
     const[roomId, setRoomId] = useState<string>('')
 
 const generateRoomId = () => {
-    const timestamp = Date.now().toString(36).substring(4); 
-    const randomPart = Math.random().toString(36).substring(2, 6);
+    const timestamp = Date.now().toString(36).substring(2); 
+    const randomPart = Math.random().toString(36).substring(2, 8);
     return(`${timestamp}-${randomPart}`)
 }
 
