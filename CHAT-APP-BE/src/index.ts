@@ -7,7 +7,7 @@ const server = http.createServer(app)
 const wss = new WebSocketServer({ server })
 
 interface RoomData {
-    messages : { type: string; message: string}[];
+    messages : { type: string; message: string, userId: string}[];
     users: Set <WebSocket>
 }
 
@@ -34,15 +34,16 @@ wss.on("connection", (socket) => {
 
         if(data.type === "join"){
             const roomId = data.payload.roomId;
-            if(!rooms.has(roomId)){
-                socket.send(JSON.stringify({
-                    type: "error",
-                    message: "Room doesn't exist, check the code"
-                }))
-            }
-            
-            handleJoin(socket, roomId)
-            currentRoomId = roomId
+                if(!rooms.has(roomId)){
+                    socket.send(JSON.stringify({
+                        type: "error",
+                        message: "Room doesn't exist, check the code"
+                    }))
+
+                    return
+                }
+                handleJoin(socket, roomId)
+                currentRoomId = roomId
         }
         
         
@@ -52,7 +53,8 @@ wss.on("connection", (socket) => {
                 
                 const msgObj = {
                     type: "received",
-                    message: data.payload.message
+                    message: data.payload.message,
+                    userId: data.userId
                 } 
                 
                 room?.messages.push(msgObj)
@@ -61,9 +63,20 @@ wss.on("connection", (socket) => {
                     if(client !== socket && client.readyState === WebSocket.OPEN){
                         client.send(JSON.stringify(msgObj))
                     }})
-                    
                 }
             }
+
+        if(data.type === "leave"){
+            // console.log(currentRoomId + " " + data.payload.roomId)
+            if(currentRoomId && rooms.has(currentRoomId) && data.payload.roomId === currentRoomId){
+                const room = rooms.get(currentRoomId)
+                room?.users.delete(socket)
+// @ts-ignore
+                if(room?.users.size < 1){
+                    rooms.delete(currentRoomId)
+                }
+            }
+        }
     }
     catch(e){
         console.error("Error " , e)
