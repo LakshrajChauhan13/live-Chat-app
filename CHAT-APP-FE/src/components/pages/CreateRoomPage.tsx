@@ -4,6 +4,7 @@ import { useEffect } from "react"
 import { useAppDispatch } from "@/store/hook"
 import { setRoomId } from "@/store/slice/roomIdSlice"
 import { useNavigate } from "@tanstack/react-router"
+import { toast } from "sonner"
 
 
 const CreateRoomPage = () => {
@@ -34,7 +35,7 @@ const CreateRoomPage = () => {
 
             if(data.type === 'error'){
                 const errorMessage = data.message
-                alert(errorMessage)    
+                toast.error(errorMessage)    
                 localStorage.removeItem("currentRoom")
             }
         }

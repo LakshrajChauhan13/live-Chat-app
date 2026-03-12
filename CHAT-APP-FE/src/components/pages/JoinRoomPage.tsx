@@ -6,6 +6,7 @@ import { ReadyState } from 'react-use-websocket';
 import { useAppDispatch } from '@/store/hook';
 import { setRoomId } from '@/store/slice/roomIdSlice';
 import { useNavigate } from '@tanstack/react-router';
+import { toast } from 'sonner';
 
 const JoinRoomPage = () => {
     const [chatRoomId, setChatRoomId] = useState('');
@@ -38,7 +39,7 @@ const JoinRoomPage = () => {
 
                if(data.type === 'error'){
                      const errorMessage = data.message
-                     alert(errorMessage)    
+                     toast.error(errorMessage)    
                      localStorage.removeItem("currentRoom")
                }
             }

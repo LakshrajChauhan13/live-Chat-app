@@ -6,6 +6,7 @@ import { useNavigate, useParams } from '@tanstack/react-router';
 import { ReadyState } from 'react-use-websocket';
 import { setRoomId } from '@/store/slice/roomIdSlice';
 import { v4 as uuidv4 } from 'uuid'
+import { toast } from 'sonner';
 
 export interface messageArrayInterface{
   type?: string;
@@ -69,7 +70,7 @@ const ChatRoomPage = () => {
 
       if(data.type === 'error'){
         const errorMessage = data.message
-        alert(errorMessage)    
+        toast.error(errorMessage)    
         localStorage.removeItem("currentRoom")
         navigate({ to: '/'})
       }

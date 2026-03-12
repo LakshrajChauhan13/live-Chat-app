@@ -1,6 +1,7 @@
 import ChatRoomPage from "@/components/pages/ChatRoomPage";
 import SpinnerLoader from "@/components/ui/SpinnerLoader";
 import { createRoute, redirect } from "@tanstack/react-router";
+import { toast } from "sonner";
 
 
 export const chatRoomRoute = (rootRoute: any) => createRoute({
@@ -20,7 +21,7 @@ export const chatRoomRoute = (rootRoute: any) => createRoute({
             const data = await response.json();
             
             if(data.exists === false){
-                alert("Room doesn't exists");
+                toast.error("Room doesn't exists");
                 throw redirect({ to: '/join'});
             }
         }
