@@ -40,12 +40,12 @@ const CreateOrJoinRoomModal = ({isJoinRoom, isCreateRoom, joinChatRoom, isLoadin
     <div className="bg-bg font-sans-flex">
         <div className="max-w-6xl mx-auto h-screen text-white flex flex-col gap-5 justify-center items-center ">
 
-            <div className="flex flex-col gap-1 items-center w-70">
+            <div className="flex flex-col gap-1 justify-center items-center w-80">
                 <Link to={'/'} >
                     <ProjectTitle className="text-4xl  hover:cursor-pointer hover:transition-all hover:duration-500 hover:bg-linear-to-t hover:from-pink-400 hover:via-pink-400 hover:to-pink-300" />
                 </Link>
-                <h2 className="text-xs text-center font-light w-full tracking-widest text-neutral-400">
-                    Maintain your privacy with Flamingo.
+                <h2 className="text-xs text-center font-light w-full tracking-[0.15em] text-neutral-400">
+                    Privacy with Vaulrizz.
                 </h2>
             </div>
 
