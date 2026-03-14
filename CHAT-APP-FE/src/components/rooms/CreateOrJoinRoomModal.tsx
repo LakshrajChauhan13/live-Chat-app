@@ -3,9 +3,9 @@ import ProjectTitle from "../brandName/ProjectTitle"
 import { Link } from "@tanstack/react-router";
 
 interface CreateOrJoinRoomPropsInterface{
-    joinChatRoom: ((roomId: string) => void) ;
+    joinChatRoom?: ((roomId: string) => void) ;
     isLoading?: boolean;
-    createChatRoom: ((roomId: string) => void) ;
+    createChatRoom?: ((roomId: string) => void) ;
     isJoinRoom?: boolean;
     isCreateRoom? : boolean;
     userId: string
@@ -27,13 +27,13 @@ const CreateOrJoinRoomModal = ({isJoinRoom, isCreateRoom, joinChatRoom, isLoadin
         function handleCreateRoomId() {
             const randomRoomId = generateRoomId()
             console.log(randomRoomId)
-            createChatRoom(randomRoomId)
+            createChatRoom?.(randomRoomId)
         }
         
         function handleJoinRoomId(e: any){
             e.preventDefault()
             console.log(roomId)
-            joinChatRoom(roomId)
+            joinChatRoom?.(roomId)
         }
         
   return (
