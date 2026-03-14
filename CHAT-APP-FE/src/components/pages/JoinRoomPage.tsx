@@ -1,17 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import ProjectTitle from '../brandName/ProjectTitle'
+import { useEffect } from 'react'
 import CreateOrJoinRoomModal from '../rooms/CreateOrJoinRoomModal';
 import { useGlobalWebSocket } from '@/ContextApi/WebSocketContextProvider';
 import { ReadyState } from 'react-use-websocket';
-import { useAppDispatch } from '@/store/hook';
-import { setRoomId } from '@/store/slice/roomIdSlice';
 import { useNavigate } from '@tanstack/react-router';
 import { toast } from 'sonner';
 
 const JoinRoomPage = () => {
-    const [chatRoomId, setChatRoomId] = useState('');
     const {sendMessage, lastMessage, readyState, userId} = useGlobalWebSocket();
-    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     
       function joinChatRoom(roomId: string) {
@@ -32,7 +27,6 @@ const JoinRoomPage = () => {
             if(data.type === "joined"){
                 const roomId = data.payload.roomId
                 localStorage.setItem("currentRoom", roomId)
-                dispatch(setRoomId(roomId));
                 // data.payload.roomId , dispatch the room 
                 navigate({ to: `/chat/room/${roomId}`})
             }
@@ -47,7 +41,7 @@ const JoinRoomPage = () => {
 
   return (
      <>
-        <CreateOrJoinRoomModal isJoinRoom={true} isCreateRoom={false} joinChatRoom={joinChatRoom} userId={userId} />
+        <CreateOrJoinRoomModal  isJoinRoom={true} isCreateRoom={false} joinChatRoom={joinChatRoom} userId={userId} />
      </>
   )
 }

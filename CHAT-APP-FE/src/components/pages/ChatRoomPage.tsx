@@ -1,10 +1,8 @@
 import { useGlobalWebSocket } from '@/ContextApi/WebSocketContextProvider'
 import ChatRoom from '../rooms/ChatRoom'
-import { useAppDispatch, useAppSelector } from '@/store/hook'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ReadyState } from 'react-use-websocket';
-import { setRoomId } from '@/store/slice/roomIdSlice';
 import { v4 as uuidv4 } from 'uuid'
 import { toast } from 'sonner';
 
@@ -20,7 +18,6 @@ const ChatRoomPage = () => {
   const { roomId } = useParams({ strict: false })                                                          // useAppSelector(state => state.roomId.roomId) 
   const [message, setMessage] = useState('')
   const [messageArray, setMessageArray] = useState<messageArrayInterface[]>([])
-  const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const [userCount, setUserCount] = useState<number>(0);
   
@@ -33,7 +30,6 @@ const ChatRoomPage = () => {
         const roomId = data.payload.roomId
         console.log('dnk')
         localStorage.setItem("currentRoom", roomId)
-        dispatch(setRoomId(roomId));
         setUserCount(data.roomUserCount);
         console.log(`inside joined - ${data.roomUserCount}`)
       }
@@ -75,7 +71,7 @@ const ChatRoomPage = () => {
         navigate({ to: '/'})
       }
     }
-  },[lastMessage, dispatch, navigate])
+  },[lastMessage, navigate])
 
   useEffect(() => {
     if(readyState == ReadyState.OPEN){

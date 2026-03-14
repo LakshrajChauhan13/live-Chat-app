@@ -18,7 +18,7 @@ interface ChatPropsInterface {
     userCount: number
 }
 
-const ChatRoom = ({message, setMessage, sendMessage, chatRoomId, messageArray, setMessageArray, connectionStatus, leaveRoom, userId, DeleteMessage, userCount}: ChatPropsInterface ) => {
+const ChatRoom = ({message, setMessage, sendMessage, chatRoomId, messageArray, leaveRoom, userId, DeleteMessage, userCount}: ChatPropsInterface ) => {
   // const chatRoomId =  useAppSelector(state => state.roomId)
   const [isCopied, setIsCopied] = useState(false)
   const copyRef = useRef(0)

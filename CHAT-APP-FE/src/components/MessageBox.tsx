@@ -48,7 +48,7 @@ export const MessageBox2 = ({message, userId, key, id, deleteMessage}: MessageIn
     )
 }
 
-const ChatMessage = ({className1, className2, className3, message, userId, deleteMessage, messageId}: {
+const ChatMessage = ({className1, className2, className3, message, userId, deleteMessage}: {
     className1?: string, 
     className2?: string, 
     className3?: string, 

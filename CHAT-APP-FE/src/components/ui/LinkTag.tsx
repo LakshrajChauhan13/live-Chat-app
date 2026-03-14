@@ -1,6 +1,5 @@
 import { cn } from '@/lib/utils'
 import { Link } from '@tanstack/react-router'
-import React from 'react'
 
 const LinkTag = ({to, className, children}: {to: string; className?: string; children: string}) => {
   return (

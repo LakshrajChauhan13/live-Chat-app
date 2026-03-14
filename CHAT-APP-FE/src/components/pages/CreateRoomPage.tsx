@@ -1,15 +1,12 @@
 import { useGlobalWebSocket } from "@/ContextApi/WebSocketContextProvider"
 import CreateOrJoinRoomModal from "../rooms/CreateOrJoinRoomModal"
 import { useEffect } from "react"
-import { useAppDispatch } from "@/store/hook"
-import { setRoomId } from "@/store/slice/roomIdSlice"
 import { useNavigate } from "@tanstack/react-router"
 import { toast } from "sonner"
 
 
 const CreateRoomPage = () => {
     const {sendMessage, lastMessage, userId} = useGlobalWebSocket()
-    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     
     function createChatRoom(roomId: string){
@@ -29,7 +26,6 @@ const CreateRoomPage = () => {
             if(data.type === "joined"){
                 const roomId = data.payload.roomId
                 localStorage.setItem("currentRoom", roomId)
-                dispatch(setRoomId(roomId));
                 navigate({ to: `/chat/room/${roomId}`})
             }
 
