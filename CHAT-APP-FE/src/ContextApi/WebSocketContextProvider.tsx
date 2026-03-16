@@ -15,7 +15,7 @@ const webSocketContext = createContext<WebSocketContextInterface | null>(null);
 
 const WebSocketContextProvider = ({children} : {children: ReactNode}) => {
         
-    const { sendMessage, lastMessage, readyState } = useWebSocket("ws://localhost:3000", {
+    const { sendMessage, lastMessage, readyState } = useWebSocket( import.meta.env.VITE_WS_URL || "ws://localhost:3000", {
     shouldReconnect: () => true
     });
     const [userId] = useState(()=> {

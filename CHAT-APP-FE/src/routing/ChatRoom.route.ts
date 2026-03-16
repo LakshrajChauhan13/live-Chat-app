@@ -17,7 +17,7 @@ export const chatRoomRoute = (rootRoute: any) => createRoute({
                 }, 3000)
             });
                         
-            const response = await fetch(`http://localhost:3000/chat/room/${params.roomId}/check`);
+            const response = await fetch(`${ import.meta.env.VITE_API_URL || 'http://localhost:3000'}/chat/room/${params.roomId}/check`);
             const data = await response.json();
             
             if(data.exists === false){

@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import express from 'express'
 import { WebSocketServer, WebSocket } from "ws"
 import http from "http"
@@ -8,7 +9,7 @@ const server = http.createServer(app)
 const wss = new WebSocketServer({ server })
 
 app.use(cors({
-    origin: 'http://localhost:5174'
+    origin: process.env.FRONTEND_URL || 'http://localhost:5174'
 }))
 
 interface RoomData {
@@ -224,21 +225,8 @@ app.get('/chat/room/:roomId/check', (req, res) => {     // check room exists bef
         })
     }
 })
-// 'joined', 'history', 'error', 'received'
 
-//  {
-//     type: "join",
-//     payload: {
-//         roomId: "red"
-//     }
-//  },
-//  {
-//     type: "chat", 
-//     payload: {
-//         message: "hello"
-//     }
-//  }
 
-server.listen(3000, () => {
-    console.log("server running on the port 3000")
+server.listen(process.env.PORT || 3000, () => {
+    console.log(`server running on the port ${process.env.PORT || 3000} ` )
 })
