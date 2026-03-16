@@ -226,7 +226,8 @@ app.get('/chat/room/:roomId/check', (req, res) => {     // check room exists bef
     }
 })
 
+const PORT = Number(process.env.PORT) || 3000
 
-server.listen(process.env.PORT || 3000, () => {
-    console.log(`server running on the port ${process.env.PORT || 3000} ` )
+server.listen(PORT, '0.0.0.0', () => {
+    console.log(`server running on the port ${PORT} ` )
 })
