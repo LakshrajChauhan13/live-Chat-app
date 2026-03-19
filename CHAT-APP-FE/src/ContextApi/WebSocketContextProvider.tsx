@@ -1,3 +1,4 @@
+import getOrGenerateUserId from '@/utils/utils';
 import { createContext, useContext, useState, type ReactNode } from 'react'
 import type { SendMessage } from 'react-use-websocket'
 import useWebSocketRaw, {ReadyState} from 'react-use-websocket'
@@ -18,17 +19,7 @@ const WebSocketContextProvider = ({children} : {children: ReactNode}) => {
     const { sendMessage, lastMessage, readyState } = useWebSocket( import.meta.env.VITE_WS_URL || "ws://localhost:3000", {
     shouldReconnect: () => true
     });
-    const [userId] = useState(()=> {
-        const savedUserId = localStorage.getItem('userId')
-        if(savedUserId) {
-          return savedUserId;
-        }
-        
-        const randomId = Math.random().toString(36) + Date.now().toString(36)
-        const userId = "Anony-user-" + randomId.substring(3,10)
-        localStorage.setItem("userId", userId)
-        return userId;
-      })
+    const [userId] = useState(()=> getOrGenerateUserId())
 
 
     const connectionStatus = {
