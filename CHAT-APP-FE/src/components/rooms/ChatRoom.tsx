@@ -3,6 +3,7 @@ import CopyIcons from "../../icons/CopyIcon";
 import MessageBox, { MessageBox2 } from "../MessageBox";
 import TickIcon from "../../icons/TickIcon";
 import type { messageArrayInterface } from "../pages/ChatRoomPage";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
 
 interface ChatPropsInterface {
     message: string;
@@ -61,15 +62,15 @@ const ChatRoom = ({message, setMessage, sendMessage, chatRoomId, messageArray, l
       <div className="flex gap-2 justify-start items-center " >
               <h2 className="tracking-wide flex items-center gap-1 text-xs ">
                 ROOM ID: 
-                <span className="px-3.5 py-2 border-2 border-neutral-200/50 rounded-full text-[14px] font-sans-flex bg-neutral-800  cursor-default">
+                <span className="px-3.5 py-2 border-2 border-neutral-200/50 rounded-full text-[14px] font-thin  font-sans-flex bg-neutral-800  cursor-default">
                   {chatRoomId}
                 </span> 
               </h2>
-              <button onClick={copyToClipBoard} className={`flex gap-1 justify-between items-center px-2 py-1 rounded-full hover:bg-neutral-800  
+              <button onClick={copyToClipBoard} className={`flex gap-1 justify-between items-center rounded-full px-3 py-2 hover:bg-neutral-800  
                 duration-150 transition-all group p-2 ${isCopied? "cursor-not-allowed" : "cursor-pointer active:scale-99 " } `}>
                   {isCopied ? <TickIcon /> : <CopyIcons className="size-3.5 " /> } 
-                  <h2 className="font-sans-flex text-sm   ">
-                    {isCopied ? "Copied" : "Copy ID"}
+                  <h2 className="font-sans-flex text-sm ">
+                    {isCopied ? "Copied!!" : "Copy ID"}
                   </h2> 
               </button>
         </div>
@@ -78,15 +79,38 @@ const ChatRoom = ({message, setMessage, sendMessage, chatRoomId, messageArray, l
           <div className="px-3 py-2 text-neutral-200/50 text-sm rounded-full bg-neutral-800">
              Users: {userCount}/2
           </div>
-          <button className="px-3 py-1 text-sm active:scale-95 rounded-full hover:bg-red-500 bg-red-500/10 text-red-500 
-          hover:text-white tracking-wide cursor-pointer transition-all duration-150"
-          onClick={leaveRoom}> 
-            Leave 
-          </button>
+
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button className="px-3 py-2 text-sm active:scale-95 rounded-full hover:bg-red-500 bg-red-500/10 text-red-500 
+            hover:text-white tracking-wide cursor-pointer transition-all duration-150">
+                Leave
+              </button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="font-sans-flex bg-neutral-900 rounded-4xl border-none text-white">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-xl text-neutral-200 ">Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription className="text-sm tracking-tight ">
+                  This action cannot be undone. You will be removed from the chat room, 
+                  and if you are the last person, the room and all messages will be 
+                  <span className="text-red-400 "> vanished </span> forever.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="bg-neutral-800 py-5 hover:bg-neutral-700 text-white hover:text-white border-neutral-700 ">Cancel</AlertDialogCancel>
+                <AlertDialogAction 
+                  className="bg-red-500/10 hover:bg-red-500 py-5 font-bold text-sm text-red-500 hover:text-white rounded-full"
+                  onClick={leaveRoom}
+                >
+                  Leave Room
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
 
     </nav>
-   <div className="h-[92%] max-w-4xl mx-auto relative rounded-2xl p-2 bg-bg py-4 flex flex-col gap-1 font-mono items-end overflow-hidden">
+   <div className="h-[92%] selection:bg-white/30 max-w-4xl mx-auto relative rounded-2xl p-2 bg-bg py-4 flex flex-col gap-1 font-mono items-end overflow-hidden">
            
           <div ref={chatContainerRef} className="relative text-white h-full w-full no-scrollbar py-2 pt-4 px-1 overflow-y-auto flex flex-col items-center gap-4 mask-t-from-97% mask-b-from-95%  z-5 overflow-x-hidden">
             {messageArray.length < 1 ? 
@@ -114,7 +138,7 @@ const ChatRoom = ({message, setMessage, sendMessage, chatRoomId, messageArray, l
           </div>
           
           
-          <form onSubmit={(e) => sendMessage(e)} className="flex h-18 text-base bg-neutral-500/50 w-full mx-auto gap-2 shadow-aceternity-dark  p-1 rounded-full">
+          <form onSubmit={(e) => sendMessage(e)} className="flex selection:bg-neutral-50 h-18 text-lg bg-neutral-500/50 w-full mx-auto gap-2 shadow-aceternity-dark  p-1 rounded-full">
             <input 
               type="text" 
               required

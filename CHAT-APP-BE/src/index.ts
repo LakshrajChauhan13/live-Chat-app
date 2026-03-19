@@ -19,7 +19,9 @@ interface RoomData {
         userId: string, 
         id: string
     }[];
-    users: Set <WebSocket>          // using set instead of an [], coz SET always carries the unique values. as all websocket/user are unique.
+    users: Set <WebSocket>;          // using set instead of an [], coz SET always carries the unique values. as all websocket/user are unique.
+    userId: Set <string>;
+    clock: NodeJS.Timeout | undefined
 }
 
 const rooms = new Map<string, RoomData>()
@@ -37,7 +39,7 @@ wss.on("connection", (socket) => {
             const userId = data.userId
             console.log(roomId)
             if(!rooms.has(roomId)){
-                rooms.set(roomId, { messages: [] , users: new Set()})
+                rooms.set(roomId, { messages: [] , users: new Set(), userId: new Set(), clock: undefined})
                 console.log('room created')
             }
                 
@@ -147,7 +149,16 @@ socket.on("close", () => {
         if(currentRoomId && rooms.has(currentRoomId)){
             const room = rooms.get(currentRoomId)
             room?.users.delete(socket)
-// @ts-ignore
+            const uId = (socket as any).userId      // userId attached to the socket
+            if(uId) room?.userId.delete(uId)
+
+                if(room?.users.size === 0){
+                    room.clock = setTimeout(() => {
+                        if(currentRoomId){
+                            rooms.delete(currentRoomId)
+                        }
+                    }, 1000 * 60 * 10);
+                }
         }
     })
 })
@@ -199,7 +210,13 @@ function handleJoin(socket: WebSocket, roomId: string, userId: string ){
             }
         })
     }
-    // @ts-ignore
+    if(room.clock){
+        if(room.users.size > 0){
+            clearTimeout(room.clock)
+            room.clock = undefined
+        }
+    }1
+        
     if(room?.messages.length > 0){
         socket.send(JSON.stringify({
             type: "history",

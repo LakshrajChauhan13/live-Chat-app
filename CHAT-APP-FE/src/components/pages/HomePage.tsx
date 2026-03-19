@@ -48,7 +48,7 @@ const HomePage = () => {
                     Join Room
                 </LinkTag>
             </div>
-            <div className="max-w-5xl  mx-auto space-y-5">
+            <div className="max-w-6xl  mx-auto space-y-5">
 
                     <div className=" bg-linear-to-r from-transparent via-pink-500/50 to-transparent h-px w-full " />
 
@@ -56,6 +56,7 @@ const HomePage = () => {
                         <Heading heading="Live-Chat" title="Real-time delivery with zero latency via WebSockets." />
                         <Heading heading="Auto-Deletion" title="Data is wiped from memory the moment the room closes." />
                         <Heading heading="No Registration" title="Zero friction. No email or phone number required." />
+                        <Heading heading="Session Recover" title="Seamlessly reconnect within a 10-minute grace period if your network drops." />
                     </div>
             </div>
           
