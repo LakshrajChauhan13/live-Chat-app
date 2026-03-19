@@ -9,7 +9,7 @@ const server = http.createServer(app)
 const wss = new WebSocketServer({ server })
 
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5174'
+    origin: process.env.FRONTEND_URL || 'http://localhost:5174' || 'http://localhost:5173'
 }))
 
 interface RoomData {
@@ -116,6 +116,7 @@ wss.on("connection", (socket) => {
             if(currentRoomId && rooms.has(currentRoomId) && data.payload.roomId === currentRoomId){
                 const room = rooms.get(currentRoomId);
                 room?.users.delete(socket);
+                room?.userId.delete(userId);
 
                 const systemObj = {
                     type: 'system',
@@ -166,12 +167,14 @@ socket.on("close", () => {
 function handleJoin(socket: WebSocket, roomId: string, userId: string ){
     const room = rooms.get(roomId);
     const isAlreadyInRoom = room?.users.has(socket);
+    (socket as any).userId = userId     // attached the userId to the socket so can cleanup later on close
 
     if(!room) return;
     
     if(!isAlreadyInRoom){
         if(room?.users.size < 2){
-            room?.users.add(socket)
+            room?.users.add(socket);
+            room.userId.add(userId)
         }
         else{
             socket.send(JSON.stringify({
@@ -227,19 +230,24 @@ function handleJoin(socket: WebSocket, roomId: string, userId: string ){
 
 app.get('/chat/room/:roomId/check', (req, res) => {     // check room exists before joining
     const roomId = req.params.roomId;
-    console.log(roomId.toString())
-    console.log(` check - ${rooms.has(roomId)}`)
-    if(rooms.has(roomId)){
+    const userId = req.query.userId;
+    const room = rooms.get(roomId)
+
+    if(room){
+        const isUserAlreadyIn = room?.userId.has(userId as string)
+        const isFull = room.users.size >= 2 && !isUserAlreadyIn;
         res.json({
             exists: true,
-            message: 'room exists'
+            isFull: isFull,
+            message: isFull ? 'Room is Full (Max 2 allowed)' : 'Room exists'
         })
+        
     }
     else{
         res.json({
             exists: false,
             message: "room doesn't exists"
-        })
+        })  
     }
 })
 

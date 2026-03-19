@@ -2,6 +2,7 @@ import ChatRoomPage from "@/components/pages/ChatRoomPage";
 import SpinnerLoader from "@/components/ui/SpinnerLoader";
 import { createRoute, redirect } from "@tanstack/react-router";
 import { toast } from "sonner";
+import getOrGenerateUserId from '@/utils/utils'
 
 
 export const chatRoomRoute = (rootRoute: any) => createRoute({
@@ -16,13 +17,19 @@ export const chatRoomRoute = (rootRoute: any) => createRoute({
                     resolve('')
                 }, 3000)
             });
-                        
-            const response = await fetch(`${ import.meta.env.VITE_API_URL || 'http://localhost:3000'}/chat/room/${params.roomId}/check`);
+            
+            const userId = getOrGenerateUserId();
+            
+            const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/chat/room/${params.roomId}/check?userId=${userId}`);
             const data = await response.json();
             
             if(data.exists === false){
                 toast.error("Room doesn't exists");
                 throw redirect({ to: '/join'});
+            }
+            if(data.isFull){
+                toast.error(data.message)
+                throw redirect({ to: '/join'})
             }
         }
         catch(error){

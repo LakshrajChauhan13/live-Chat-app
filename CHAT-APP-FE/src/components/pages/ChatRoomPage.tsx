@@ -1,6 +1,6 @@
 import { useGlobalWebSocket } from '@/ContextApi/WebSocketContextProvider'
 import ChatRoom from '../rooms/ChatRoom'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { ReadyState } from 'react-use-websocket';
 import { v4 as uuidv4 } from 'uuid'
@@ -20,6 +20,7 @@ const ChatRoomPage = () => {
   const [messageArray, setMessageArray] = useState<messageArrayInterface[]>([])
   const navigate = useNavigate()
   const [userCount, setUserCount] = useState<number>(0);
+  const hasJoined = useRef(false)
   
 
   useEffect(() => {
@@ -74,8 +75,8 @@ const ChatRoomPage = () => {
   },[lastMessage, navigate])
 
   useEffect(() => {
-    if(readyState == ReadyState.OPEN){
-    const savedRoom = localStorage.getItem('currentRoom');
+    if(readyState == ReadyState.OPEN && !hasJoined.current){
+    const savedRoom = roomId || localStorage.getItem('currentRoom');
     if(savedRoom){
       sendMessage(JSON.stringify({
         type: 'join',
@@ -85,9 +86,9 @@ const ChatRoomPage = () => {
         userId: userId
       }))
     }
-    
+      hasJoined.current = true
     }
-  },[readyState])
+  },[readyState, roomId])
   
   function sendChat(e: any) {
     e.preventDefault()
