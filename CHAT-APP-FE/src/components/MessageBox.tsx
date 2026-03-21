@@ -5,7 +5,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { useState } from "react";
 import type { messageArrayInterface } from "./pages/ChatRoomPage";
 import { toast } from "sonner";
 
@@ -58,11 +57,11 @@ const ChatMessage = ({className1, className2, className3, message, userId, delet
     deleteMessage: () => void,
     messageId: string
 }) => {
-    const [isVisible, setIsVisible] = useState(false)
+    // const [isVisible, setIsVisible] = useState(false)
     
-    function visible() {
-        setIsVisible(c => !c);    
-    }
+    // function visible() {
+    //     setIsVisible(c => !c);    
+    // }
 
     function copyToClipBoard(){
         navigator.clipboard.writeText(message.message);
@@ -85,7 +84,7 @@ const ChatMessage = ({className1, className2, className3, message, userId, delet
                 {/* Popover */}
                 <Popover>
                     <PopoverTrigger asChild>
-                        <button onClick={visible} className={`cursor-pointer ${isDeleted && 'hidden'}`}>
+                        <button className={`cursor-pointer ${isDeleted && 'hidden'}`}>
                             {isSender && <Vertical_ellipsisIcon /> }      
                         </button>
                     </PopoverTrigger>

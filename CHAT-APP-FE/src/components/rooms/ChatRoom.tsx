@@ -97,9 +97,17 @@ const ChatRoom = ({message, setMessage, sendMessage, chatRoomId, messageArray, l
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel className="bg-neutral-800 py-5 hover:bg-neutral-700 text-white hover:text-white border-neutral-700 ">Cancel</AlertDialogCancel>
+                <AlertDialogCancel 
+                  variant={"outline"}
+                  size={"default"}
+                  className="bg-neutral-800 py-5 hover:bg-neutral-700 text-sm text-white hover:text-white border-neutral-700 "
+                >
+                  Cancel
+                </AlertDialogCancel>
                 <AlertDialogAction 
-                  className="bg-red-500/10 hover:bg-red-500 py-5 font-bold text-sm text-red-500 hover:text-white rounded-full"
+                  variant={"default"}
+                  size={"default"}
+                  className="bg-red-500/10 hover:bg-red-500 py-5 border-red-500/0 border font-bold  text-red-500 hover:text-white rounded-full"
                   onClick={leaveRoom}
                 >
                   Leave Room
