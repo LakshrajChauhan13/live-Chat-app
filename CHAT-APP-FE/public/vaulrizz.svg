@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="38 37 180 180">
+  <defs>
+    <linearGradient id="vaulrizzGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#831843" /> 
+      <stop offset="50%" stop-color="#ec4899" /> 
+      <stop offset="100%" stop-color="#831843" /> 
+    </linearGradient>
+  </defs>
+  
+  <circle cx="128" cy="65" r="16" fill="#ec4899" />
+  
+  <path d="M 68 95 L 128 205 L 188 95 L 148 95 L 128 145 L 108 95 Z" fill="url(#vaulrizzGrad)" />
+</svg>
