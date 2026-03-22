@@ -51,7 +51,7 @@ npm run dev
 
 **Env vars** ([.env.example](CHAT-APP-BE/.env.example)):
 ```env
-FRONTEND_URL=http://localhost:5174
+FRONTEND_URL=http://localhost:5173
 PORT=3000
 ```
 
@@ -60,7 +60,7 @@ PORT=3000
 cd CHAT-APP-FE
 npm install
 npm run dev
-# App runs on http://localhost:5174
+# App runs on http://localhost:5173
 ```
 
 **Env vars** ([.env.development](CHAT-APP-FE/.env.development)):

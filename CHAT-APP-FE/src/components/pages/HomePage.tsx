@@ -1,4 +1,3 @@
-import { Github, GithubIcon } from "@hugeicons/core-free-icons"
 import BlurText from "../BlurText"
 import ProjectTitle from "../brandName/ProjectTitle"
 import DotGrid from "../DotGrid"
