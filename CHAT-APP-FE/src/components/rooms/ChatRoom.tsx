@@ -118,7 +118,7 @@ const ChatRoom = ({ message, setMessage, sendMessage, chatRoomId, messageArray, 
               if (message.type === 'system') {
                 return (
                   <div key={idx} className="w-full text-xs sm:text-sm bg-neutral-600/50 italic text-neutral-100 text-center font-sans-flex font-thin tracking-wider mask-r-from-20% mask-l-from-20%">
-                    {message.userId === userId ? 'You joined the chat!!' : message.message}
+                    {message.userId === userId ? `You (${message.userId}) joined the chat!!` : message.message}
                   </div>
                 )
               }

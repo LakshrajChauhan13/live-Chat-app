@@ -1,8 +1,10 @@
+import { Github, GithubIcon } from "@hugeicons/core-free-icons"
 import BlurText from "../BlurText"
 import ProjectTitle from "../brandName/ProjectTitle"
 import DotGrid from "../DotGrid"
 import Heading from "../ui/Heading"
 import LinkTag from "../ui/LinkTag"
+import GitHubIcon from "@/icons/GitHubIcon"
 
 const HomePage = () => {
   return (
@@ -41,11 +43,14 @@ const HomePage = () => {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 font-sans-flex w-full sm:w-auto justify-center items-center">
-          <LinkTag to={'create'} className="w-full sm:w-52 py-4 sm:py-6">
+          <LinkTag link={true} to={'/create'} className="w-full sm:w-52 py-4 sm:py-6">
             Create Room
           </LinkTag>
-          <LinkTag to={'/join'} className="w-full sm:w-52 py-4 sm:py-6">
+          <LinkTag link={true} to={'/join'} className="w-full sm:w-52 py-4 sm:py-6">
             Join Room
+          </LinkTag>
+          <LinkTag a={true} to={'https://github.com/lakshrajchauhan13/live-chat-app'} className="w-full sm:w-52 py-4 sm:py-6 ">
+            <GitHubIcon />
           </LinkTag>
         </div>
 
@@ -58,7 +63,6 @@ const HomePage = () => {
             <Heading heading="Session Recover" title="Seamlessly reconnect within a 10-minute grace period if your network drops." />
           </div>
         </div>
-
       </div>
     </div>
   )
