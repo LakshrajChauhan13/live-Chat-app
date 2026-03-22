@@ -53,7 +53,7 @@ const ChatRoom = ({ message, setMessage, sendMessage, chatRoomId, messageArray, 
           <h2 className="tracking-wide items-center gap-1 sm:text-xs text-[8px]  sm:flex shrink-0">
             ROOM ID:
           </h2>
-          <span className="px-2 sm:px-3.5 py-1.5 sm:py-2 border-2 border-neutral-200/50 rounded-full text-[10px] sm:text-[14px] font-thin font-sans-flex bg-neutral-800 cursor-default max-w-[110px] sm:max-w-none truncate">
+          <span className="px-2 sm:px-3.5 py-1.5 sm:py-2 border-2 border-neutral-200/50 rounded-full text-[10px] sm:text-[14px] font-thin font-sans-flex bg-neutral-800 cursor-default max-w-27.5 sm:max-w-none truncate">
             {chatRoomId}
           </span>
           <button

@@ -100,7 +100,7 @@ const ChatMessage = ({className1, className2, className3, message, userId, delet
 
             <div className={cn("flex w-full", isSender ? "justify-end pr-9" : "justify-start pl-9")}>
                 <div className={cn(
-                    "inline-block w-fit max-w-full break-words text-base font-mono inset-shadow-aceternity-dark shadow-aceternity-dark px-3 py-2 text-neutral-50 rounded-b-xl",
+                    "inline-block w-fit max-w-full wrap-break-words text-base font-mono inset-shadow-aceternity-dark shadow-aceternity-dark px-3 py-2 text-neutral-50 rounded-b-xl",
                     isDeleted ? "italic bg-neutral-700 opacity-50" : "bg-neutral-900",
                     className2
                 )}>

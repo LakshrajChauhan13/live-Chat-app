@@ -45,7 +45,7 @@ const CreateOrJoinRoomModal = ({ isJoinRoom, isCreateRoom, joinChatRoom, isLoadi
                     </h2>
                 </div>
 
-                <div className="w-full max-w-[480px] border-neutral-600/30 transition-all duration-100 border-2 flex flex-col gap-5 rounded-4xl px-5 py-5 bg-neutral-900">
+                <div className="w-full max-w-120 border-neutral-600/30 transition-all duration-100 border-2 flex flex-col gap-5 rounded-4xl px-5 py-5 bg-neutral-900">
 
                     <div className="flex flex-col gap-1">
                         <h1 className="text-xl text-neutral-300">

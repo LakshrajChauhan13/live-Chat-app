@@ -7,7 +7,7 @@ import GitHubIcon from "@/icons/GitHubIcon"
 
 const HomePage = () => {
   return (
-    <div className="bg-neutral-950 min-h-screen relative overflow-hidden">
+    <div className="bg-neutral-950 h-screen relative overflow-hidden">
 
       <div className="absolute inset-0 mask-x-from-60%">
         <DotGrid
@@ -54,7 +54,7 @@ const HomePage = () => {
         </div>
 
         <div className="w-full max-w-6xl mx-auto ">
-          <div className="bg-linear-to-r from-transparent via-pink-500/50 to-transparent h-px w-full mb-7 sm:mb-2" />
+          <div className="bg-linear-to-r from-transparent via-pink-500/50 to-transparent h-px w-full mb-7 sm:mb-4" />
           <div className="grid grid-cols-1 sm:grid-cols-4 font-sans-flex gap w-full">
             <Heading heading="Live-Chat" title="Real-time delivery with zero latency via WebSockets." />
             <Heading heading="Auto-Deletion" title="Data is wiped from memory the moment the room closes." />
