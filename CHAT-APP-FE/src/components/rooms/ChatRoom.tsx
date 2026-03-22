@@ -47,13 +47,13 @@ const ChatRoom = ({ message, setMessage, sendMessage, chatRoomId, messageArray, 
 
   return (
     <>
-      <nav className="h-[8%] min-h-[56px] w-full bg-neutral-950/90 text-white px-3 sm:px-10 flex items-center justify-between font-sans-flex border-b border-neutral-500 gap-2">
+      <nav className="h-14 sm:h-17 shrink-0 min-h-14 w-full bg-neutral-950/90 text-white px-3 sm:px-10 flex items-center justify-between font-sans-flex border-b border-neutral-500 gap-2">
 
         <div className="flex items-center gap-1 sm:gap-2 min-w-0">
-          <h2 className="tracking-wide items-center gap-1 text-xs hidden sm:flex shrink-0">
+          <h2 className="tracking-wide items-center gap-1 sm:text-xs text-[8px]  sm:flex shrink-0">
             ROOM ID:
           </h2>
-          <span className="px-2 sm:px-3.5 py-1.5 sm:py-2 border-2 border-neutral-200/50 rounded-full text-[11px] sm:text-[14px] font-thin font-sans-flex bg-neutral-800 cursor-default max-w-[110px] sm:max-w-none truncate">
+          <span className="px-2 sm:px-3.5 py-1.5 sm:py-2 border-2 border-neutral-200/50 rounded-full text-[10px] sm:text-[14px] font-thin font-sans-flex bg-neutral-800 cursor-default max-w-[110px] sm:max-w-none truncate">
             {chatRoomId}
           </span>
           <button
@@ -61,23 +61,22 @@ const ChatRoom = ({ message, setMessage, sendMessage, chatRoomId, messageArray, 
             className={`flex gap-1 items-center rounded-full px-2 sm:px-3 py-1.5 sm:py-2 hover:bg-neutral-800 duration-150 transition-all shrink-0
               ${isCopied ? "cursor-not-allowed" : "cursor-pointer active:scale-99"}`}
           >
-            {isCopied ? <TickIcon /> : <CopyIcons className="size-3.5" />}
+            {isCopied ? <TickIcon /> : <CopyIcons className="sm:size-3.5  size-3" />}
             <span className="font-sans-flex text-xs sm:text-sm hidden sm:inline">
               {isCopied ? "Copied!!" : "Copy ID"}
             </span>
           </button>
         </div>
 
-        {/* Right: Users + Leave */}
         <div className="flex gap-1 sm:gap-2 items-center shrink-0">
-          <div className="px-2 sm:px-3 py-1.5 sm:py-2 text-neutral-200/50 text-xs sm:text-sm rounded-full bg-neutral-800">
+          <div className="px-2 sm:px-3 py-1.5 sm:py-2 text-[10px] text-neutral-200/50 text-xs sm:text-sm rounded-full bg-neutral-800">
             {userCount}/2
             <span className="hidden sm:inline"> Users</span>
           </div>
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <button className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm active:scale-95 rounded-full hover:bg-red-500 bg-red-500/10 text-red-500 hover:text-white tracking-wide cursor-pointer transition-all duration-150">
+              <button className="px-2 sm:px-3 py-1.5 sm:py-2 text-[10px] sm:text-sm active:scale-95 rounded-full hover:bg-red-500 bg-red-500/10 text-red-500 hover:text-white tracking-wide cursor-pointer transition-all duration-150">
                 Leave
               </button>
             </AlertDialogTrigger>
@@ -104,7 +103,7 @@ const ChatRoom = ({ message, setMessage, sendMessage, chatRoomId, messageArray, 
         </div>
       </nav>
 
-      <div className="h-[92%] selection:bg-white/30 max-w-4xl mx-auto relative rounded-2xl p-2 bg-bg py-4 flex flex-col gap-1 font-mono items-end overflow-hidden">
+      <div className="flex-1 w-full selection:bg-white/30 max-w-4xl mx-auto relative rounded-2xl p-2 bg-bg py-4 flex flex-col gap-1 font-mono items-end overflow-hidden">
 
         <div ref={chatContainerRef} className="relative text-white h-full w-full no-scrollbar py-2 pt-4 px-1 overflow-y-auto flex flex-col items-center gap-4 mask-t-from-97% mask-b-from-95% z-5 overflow-x-hidden">
           {messageArray.length < 1 ?

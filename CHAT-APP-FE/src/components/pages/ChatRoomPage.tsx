@@ -140,7 +140,7 @@ const ChatRoomPage = () => {
   return (
     <>
     {/* <div className='h-screen w-screen  flex bg-neutral-500 justify-center items-center'> */}
-    <div className='h-screen bg-bg'>
+    <div className='bg-bg w-full h-[100dvh] flex flex-col'>
 
       <ChatRoom 
         message={message}
