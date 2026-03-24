@@ -168,3 +168,30 @@
     scrollbar-width: none;  /* Firefox */
   }
 }
+
+/* Custom Scrollbar for Webkit (Chrome, Safari, Edge) */
+.home-scrollbar::-webkit-scrollbar {
+  width: 8px;  /* Vertical scrollbar width */
+  height: 8px; /* Horizontal scrollbar height */
+}
+
+.home-scrollbar::-webkit-scrollbar-track {
+  background: #0a0a0a; /* Matches your bg-neutral-950 */
+  border-radius: 10px;
+}
+
+.home-scrollbar::-webkit-scrollbar-thumb {
+  background: #3f3f46; /* Matches bg-neutral-700 for a subtle look */
+  border-radius: 10px;
+  border: 2px solid #0a0a0a; /* Creates a nice padding effect around the thumb */
+}
+
+.home-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #ec4899; /* Lights up in your exact Tailwind pink-500 when hovered! */
+}
+
+/* Custom Scrollbar for Firefox */
+.home-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #3f3f46 #0a0a0a; /* thumb color | track color */
+}

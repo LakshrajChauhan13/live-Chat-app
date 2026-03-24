@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/popover"
 import type { messageArrayInterface } from "./pages/ChatRoomPage";
 import { toast } from "sonner";
+import { motion } from "motion/react";
 
 interface MessageInterface {
     message: messageArrayInterface;
@@ -72,12 +73,23 @@ const ChatMessage = ({className1, className2, className3, message, userId, delet
     const isSender = userId === 'You';
     
     return (
-        <div className={cn("flex flex-col gap-1 group max-w-[80%]", isSender ? "items-end" : "items-start")} >
+        <motion.div 
+        initial={{
+            translateY: -10
+        }}
+        animate={{
+            translateY: 0
+        }}
+        transition={{
+            duration: 0.3,
+            ease: "easeOut"
+        }}
+        className={cn("flex flex-col gap-1 group max-w-[80%]", isSender ? "items-end" : "items-start")} >
 
             {/* Header / Avatar Row */}
             <div className={cn("flex items-center gap-1", className3)}>
                 <div className={cn("size-8 shrink-0 rounded-full", className1)} />
-                <span className="text-xs px-1.5 py-1 rounded-lg shadow-aceternity-dark text-neutral-500 whitespace-nowrap"> 
+                <span className="sm:text-xs text-[10px] px-1.5 py-1 rounded-lg shadow-aceternity-dark text-neutral-500 whitespace-nowrap"> 
                     {userId}  
                 </span>
                 
@@ -100,13 +112,13 @@ const ChatMessage = ({className1, className2, className3, message, userId, delet
 
             <div className={cn("flex w-full", isSender ? "justify-end pr-9" : "justify-start pl-9")}>
                 <div className={cn(
-                    "inline-block w-fit max-w-full wrap-break-words text-base font-mono inset-shadow-aceternity-dark shadow-aceternity-dark px-3 py-2 text-neutral-50 rounded-b-xl",
+                    "inline-block w-fit  max-w-full break-words whitespace-pre-wrap text-[11.5px] sm:text-base font-mono inset-shadow-aceternity-dark shadow-aceternity-dark px-3 py-2 text-neutral-50 rounded-b-xl",
                     isDeleted ? "italic bg-neutral-700 opacity-50" : "bg-neutral-900",
                     className2
                 )}>
                     {message.message}
                 </div>
             </div>
-        </div>
+        </motion.div>
     )
 }

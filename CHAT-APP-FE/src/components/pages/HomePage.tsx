@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import BlurText from "../BlurText"
 import ProjectTitle from "../brandName/ProjectTitle"
 import DotGrid from "../DotGrid"
@@ -6,8 +7,15 @@ import LinkTag from "../ui/LinkTag"
 import GitHubIcon from "@/icons/GitHubIcon"
 
 const HomePage = () => {
+  useEffect(() => {
+    document.documentElement.classList.add("home-scrollbar")
+
+    return () => {
+      document.documentElement.classList.remove("home-scrollbar")
+    }
+  },[])
   return (
-    <div className="bg-neutral-950 h-dvh relative overflow-hidden">
+    <div className="bg-neutral-950 min-h-dvh relative overflow-hidden">
 
       <div className="absolute inset-0 mask-x-from-60%">
         <DotGrid
@@ -20,7 +28,7 @@ const HomePage = () => {
       </div>
 
       {/* Main layout */}
-      <div className="max-w-7xl mx-auto flex flex-col gap-15 sm:gap-16 lg:gap-22 items-center justify-center relative z-10 px-4 pt-16 pb-12 lg:pt-0">
+      <div className="max-w-7xl mx-auto flex flex-col gap-15 sm:gap-16 lg:gap-19 items-center justify-center relative z-10 px-4 pt-16 pb-12 lg:pt-0">
 
         <main className="flex flex-col w-full text-center items-center">
           <ProjectTitle className="text-[80px] sm:text-[140px] md:text-[200px] lg:text-[250px] pt-6 lg:pt-12 lg:-mt-25" />
@@ -54,8 +62,8 @@ const HomePage = () => {
         </div>
 
         <div className="w-full max-w-6xl mx-auto ">
-          <div className="bg-linear-to-r from-transparent via-pink-500/50 to-transparent h-px w-full mb-7 sm:mb-6" />
-          <div className="grid grid-cols-1 sm:grid-cols-4 font-sans-flex gap w-full">
+          <div className="bg-linear-to-r from-transparent via-pink-500/50 to-transparent h-px w-full mb-7 sm:mb-7" />
+          <div className="grid grid-cols-1 sm:grid-cols-4 font-sans-flex gap w-full ">
             <Heading heading="Live-Chat" title="Real-time delivery with zero latency via WebSockets." />
             <Heading heading="Auto-Deletion" title="Data is wiped from memory the moment the room closes." />
             <Heading heading="No Registration" title="Zero friction. No email or phone number required." />

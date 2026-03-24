@@ -4,6 +4,7 @@ import MessageBox, { MessageBox2 } from "../MessageBox";
 import TickIcon from "../../icons/TickIcon";
 import type { messageArrayInterface } from "../pages/ChatRoomPage";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
+import SendIcon from "@/icons/SendIcon";
 
 interface ChatPropsInterface {
     message: string;
@@ -21,8 +22,10 @@ interface ChatPropsInterface {
 
 const ChatRoom = ({ message, setMessage, sendMessage, chatRoomId, messageArray, leaveRoom, userId, DeleteMessage, userCount }: ChatPropsInterface) => {
   const [isCopied, setIsCopied] = useState(false)
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [isScrolledUp, setIsScrolledUp] = useState(false);
   const copyRef = useRef(0)
-  const checkValueRef = useRef<HTMLInputElement>(null)
+  const checkValueRef = useRef<HTMLTextAreaElement>(null)
   const messageEndRef = useRef<HTMLDivElement>(null)
   const chatContainerRef = useRef<HTMLDivElement>(null)
 
@@ -32,6 +35,69 @@ const ChatRoom = ({ message, setMessage, sendMessage, chatRoomId, messageArray, 
     if (copyRef.current) clearTimeout(copyRef.current)
     copyRef.current = setTimeout(() => setIsCopied(false), 2000)
   }
+
+  const handleScroll = () => {
+    if (!chatContainerRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
+    // If the user is more than 150px away from the bottom, they are "scrolled up"
+    const isNearBottom = scrollHeight - scrollTop - clientHeight < 150;
+    
+    setIsScrolledUp(!isNearBottom);
+
+    // If they scroll back to the bottom manually, reset unread counts
+    if (isNearBottom) {
+      setUnreadCount(0);
+      if (!document.hidden) {
+        document.title = "Vaulrizz - Anonymous Chat"; // Reset title
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (!chatContainerRef.current || messageArray.length === 0) return;
+    
+    const container = chatContainerRef.current;
+    const lastMsg = messageArray[messageArray.length - 1];
+    
+    const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 150;
+
+    // Condition 1: User sent the message OR they are already at the bottom
+    if (isNearBottom || lastMsg.userId === userId) {
+      messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      setUnreadCount(0);
+    } 
+    // Condition 2: Someone else sent a message AND user is scrolled up
+    else {
+      setUnreadCount(prev => prev + 1);
+    }
+
+    // Condition 3: Tab is backgrounded/inactive
+    if (document.hidden && lastMsg.userId !== userId) {
+      setUnreadCount(prev => {
+        const newCount = prev + 1;
+        document.title = `(${newCount}) New Message - Vaulrizz`;
+        return newCount;
+      });
+    }
+  }, [messageArray]);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        document.title = "Vaulrizz - Anonymous Chat";
+        // If they are at the bottom when they return, clear the badge
+        if (!isScrolledUp) setUnreadCount(0); 
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, [isScrolledUp]);
+
+  const forceScrollToBottom = () => {
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    setUnreadCount(0);
+    setIsScrolledUp(false);
+  };
 
   function scrollToBottom() {
     if (!chatContainerRef.current || messageArray.length === 0) return;
@@ -44,6 +110,28 @@ const ChatRoom = ({ message, setMessage, sendMessage, chatRoomId, messageArray, 
   }
 
   useEffect(() => { scrollToBottom() }, [messageArray])
+
+  useEffect(() => {
+    const textarea = checkValueRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto'; // Reset height to recalculate
+      if (message === '') {
+        textarea.style.height = 'auto'; // Go back to default when empty
+      } else {
+        // Expand to fit content (up to max-height defined in Tailwind classes)
+        textarea.style.height = `${textarea.scrollHeight}px`;
+      }
+    }
+  }, [message]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault(); // Prevent default new line
+      if (message.trim() !== '') {
+        sendMessage(e);
+      }
+    }
+  };
 
   return (
     <>
@@ -105,7 +193,7 @@ const ChatRoom = ({ message, setMessage, sendMessage, chatRoomId, messageArray, 
 
       <div className="flex-1 w-full selection:bg-white/30 max-w-4xl mx-auto relative rounded-2xl p-2 bg-bg py-4 flex flex-col gap-1 font-mono items-end overflow-hidden">
 
-        <div ref={chatContainerRef} className="relative text-white h-full w-full no-scrollbar py-2 pt-4 px-1 overflow-y-auto flex flex-col items-center gap-4 mask-t-from-97% mask-b-from-95% z-5 overflow-x-hidden">
+        <div ref={chatContainerRef} onScroll={handleScroll} className="relative text-white h-full w-full no-scrollbar py-2 pt-4 px-1 overflow-y-auto flex flex-col items-center gap-4 mask-t-from-97% mask-b-from-95% z-5 overflow-x-hidden">
           {messageArray.length < 1 ?
             <span className="absolute text-neutral-400 opacity-70 flex-col flex gap-2 top-1/2 -translate-y-1/2 text-center font-sans-flex left-1/2 -translate-x-1/2 w-[80%]">
               <h1 className="text-xl sm:text-2xl tracking-wider italic">No messages yet!</h1>
@@ -117,7 +205,7 @@ const ChatRoom = ({ message, setMessage, sendMessage, chatRoomId, messageArray, 
             messageArray.map((message, idx) => {
               if (message.type === 'system') {
                 return (
-                  <div key={idx} className="w-full text-xs sm:text-sm bg-neutral-600/50 italic text-neutral-100 text-center font-sans-flex font-thin tracking-wider mask-r-from-20% mask-l-from-20%">
+                  <div key={idx} className="sm:w-full w-[90%] text-[10px] sm:text-sm bg-neutral-600/50 italic text-neutral-100 text-center font-sans-flex font-thin tracking-wider mask-x-from-20% sm:mask-x-from-20% ">
                     {message.userId === userId ? `You (${message.userId}) joined the chat!!` : message.message}
                   </div>
                 )
@@ -130,21 +218,36 @@ const ChatRoom = ({ message, setMessage, sendMessage, chatRoomId, messageArray, 
           <div ref={messageEndRef} />
         </div>
 
-        <form onSubmit={(e) => sendMessage(e)} className="flex h-14 sm:h-18 text-base bg-neutral-500/50 w-full mx-auto gap-2 shadow-aceternity-dark p-1 rounded-full">
-          <input
-            type="text"
+        {isScrolledUp && (
+          <button 
+            onClick={forceScrollToBottom}
+            className="absolute bottom-24 right-1/2 translate-x-1/2 z-50 flex items-center gap-2 bg-neutral-800/90 backdrop-blur-sm border border-neutral-700 text-white px-4 py-2 rounded-full shadow-lg hover:bg-neutral-700 active:scale-95 transition-all text-[11px] sm:text-sm font-sans-flex"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            {unreadCount > 0 ? `${unreadCount} New Message${unreadCount > 1 ? 's' : ''}` : 'Scroll to bottom'}
+          </button>
+        )}
+
+        <form 
+          onSubmit={(e) => sendMessage(e)} 
+          // 1. Changed rounded-full to rounded-[28px] so it looks like a pill when short, but a clean rounded box when tall
+          className="flex items-end min-h-14 sm:min-h-[72px]  w-full mx-auto gap-2  p-1 rounded-full shrink-0"
+        >
+          <textarea
             required
             ref={checkValueRef}
             placeholder="Enter message..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            className="flex-1 h-full rounded-full py-2 px-3 pl-4 sm:pl-5 text-sm sm:text-base placeholder:text-neutral-500/50 hover:placeholder:text-neutral-500 text-neutral-300 outline-none duration-300 transition-all"
+            onKeyDown={handleKeyDown}
+            rows={1}
+            className="flex-1 max-h-32 hover:shadow-aceternity-dark inset-shadow-aceternity-dark sm:max-h-40 sm:rounded-[32px] rounded-[24px] bg-transparent resize-none overflow-y-auto no-scrollbar outline-none py-3.5 sm:py-5 px-4 sm:px-5 text-sm sm:text-lg placeholder:text-neutral-500/50  hover:placeholder:text-neutral-500 duration-150 text-neutral-300 transition-all"
           />
           <button
-            disabled={checkValueRef.current?.value.trim() === ''}
-            className="h-full w-[22%] sm:w-[20%] disabled:bg-accent/40 text-neutral-800 bg-accent/85 disabled:cursor-not-allowed transition-all duration-100 text-sm sm:text-lg font-sans-flex inset-shadow-aceternity-dark rounded-full hover:shadow-aceternity-dark active:scale-95 disabled:active:scale-100 cursor-pointer"
+            disabled={message.trim() === ''}
+            className="h-12 sm:h-16 shrink-0  flex justify-center items-center sm:p-4 p-3.5 disabled:bg-bg text-neutral-800 bg-emerald-600 disabled:cursor-not-allowed transition-all duration-100 text-sm sm:text-lg font-sans-flex inset-shadow-aceternity-dark rounded-full hover:shadow-aceternity-dark active:scale-95 disabled:active:scale-100 cursor-pointer"
           >
-            Send
+            <SendIcon className="sm:size-8 stroke-white  size-5" />
           </button>
         </form>
 
